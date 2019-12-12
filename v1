@@ -47,7 +47,7 @@ void loop()
     {
        for( i=0 ; i<cantseñales ; i++)
        {
-        if(señalesact[i] == 1)
+        if(señalesact[i] == 1)// aca se produce el error
             {
                 analogWrite(motor[i],acelerar);
                 Serial.println(motor[i],acelerar);  

@@ -1,6 +1,6 @@
-int cantseñales=8;
-const int motor[cantseñales]={13,12,11,10,9,8,7,6}; // señales de motores
-const int señalesact[cantseñales]={1,0,1,0,1,0,1,0}; // señales de direccion
+int cantsegnales=8;
+const int motor[]={13,12,11,10,9,8,7,6}; // señales de motores
+const int segnalesact[]={1,0,1,0,1,0,1,0}; // señales de direccion
 int acelerar;
 int desacelerar;
 int i;
@@ -9,7 +9,7 @@ void setup(){
     desacelerar=5;
     acelerar=65;
     
-    for(i=0;i<cantseñales; i++){
+    for(i=0;i<cantsegnales; i++){
       pinMode(motor[i], OUTPUT);
       analogWrite(motor[i],0);
       }
@@ -21,10 +21,10 @@ void loop()
   //secuencia de encendido
     for(acelerar=0; acelerar<=255; acelerar++)
     {  
-      for(i=0;i<cantseñales; i++)
+      for(i=0;i<cantsegnales; i++)
       {
         pinMode(motor[i], OUTPUT);
-        if(señalesact[i] == 1)
+        if(segnalesact[i] == 1)
         {
             analogWrite(motor[i],acelerar);
             Serial.println(motor[i],acelerar);  
@@ -33,9 +33,9 @@ void loop()
       delay(500);
     }
 
-   for(i=0;i<cantseñales; i++)
+   for(i=0;i<cantsegnales; i++)
    {
-        if(señalesact[i] == 1)
+        if(segnalesact[i] == 1)
         {
             analogWrite(motor[i],255);
         }
@@ -45,9 +45,9 @@ void loop()
   //secuencia de apagado
     for( acelerar=255 ; acelerar>=0 ; acelerar = acelerar - desacelerar )
     {
-       for( i=0 ; i<cantseñales ; i++)
+       for( i=0 ; i<cantsegnales ; i++)
        {
-        if(señalesact[i] == 1)// aca se produce el error
+        if(segnalesact[i] == 1)
             {
                 analogWrite(motor[i],acelerar);
                 Serial.println(motor[i],acelerar);  
@@ -55,4 +55,3 @@ void loop()
        }      
     }
     delay(1000);
-}

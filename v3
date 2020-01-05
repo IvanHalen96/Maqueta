@@ -1,0 +1,83 @@
+#include "Arduino.h"
+#include "SoftwareSerial.h"
+#include "DFRobotDFPlayerMini.h"
+
+SoftwareSerial mySoftwareSerial(2, 3); 
+DFRobotDFPlayerMini myDFPlayer;
+const int M[]={13,12,11,10,9,8,7,6};
+const int S[]={0,1,0,1,0,1,0,1};
+int cantS=8;
+int vel;
+int i;
+void setup()
+{
+  mySoftwareSerial.begin(9600);
+  Serial.begin(115200);
+  pinMode(5,INPUT);
+  pinMode(4,OUTPUT);
+  for(i=0;i<cantS;i++){
+    pinMode(M[i],OUTPUT);
+    analogWrite(M[i],0);
+  }
+  //  if (!myDFPlayer.begin(mySoftwareSerial)) { 
+//    Serial.println("Error");
+//    while(true);
+//  }
+ // Serial.println("Funca");
+ // myDFPlayer.volume(10);  //Set volume value. From 0 to 30
+//  myDFPlayer.play(1);  //Play the first mp3
+  delay(7000);
+}
+
+void loop()
+{
+   boolean busy = digitalRead(5);
+  delay(7000);
+  if (busy==false)
+  { 
+    Serial.println("0");
+    //myDFPlayer.play(1);
+    digitalWrite(4,HIGH);
+    
+    for(vel=0; vel<=255; vel++)
+    {  
+      for(i=0;i<cantS; i++)
+      {
+        if(S[i] == 1)
+        {
+            analogWrite(M[i],vel);
+            Serial.print("Motor :");
+            Serial.print(i);
+            Serial.print("  vel: ");
+            Serial.print(vel); 
+            Serial.println(); 
+        }
+        delay(100);
+      }
+    }
+    delay(66000);
+    for(vel=255; vel>=0; vel--)
+    {  
+      for(i=0;i<cantS; i++)
+      {
+        if(S[i] == 1)
+        {
+            analogWrite(M[i],vel);
+            Serial.print("Motor :");
+            Serial.print(i);
+            Serial.print("  vel: ");
+            Serial.print(vel); 
+            Serial.println(); 
+        }
+        delay(50);
+      }
+    }
+  }
+  else{
+    Serial.println("1");
+    digitalWrite(4,HIGH);
+    delay(50);
+  }
+  
+  delay(50);
+}

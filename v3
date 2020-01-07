@@ -2,81 +2,79 @@
 #include "SoftwareSerial.h"
 #include "DFRobotDFPlayerMini.h"
 
-SoftwareSerial mySoftwareSerial(2, 3); 
+SoftwareSerial mySoftwareSerial(2, 3); //RX , TX
 DFRobotDFPlayerMini myDFPlayer;
-const int M[]={13,12,11,10,9,8,7,6};
-const int S[]={0,1,0,1,0,1,0,1};
-int cantS=8;
+const int M[]={13,12,11,10,9,8,7,6}; //pin de los motores
+const int S[]={0,1,0,1,0,1,0,1}; //señales activas de los motores
+int cantS=8; //cantidad de señales
 int vel;
 int i;
 void setup()
 {
   mySoftwareSerial.begin(9600);
   Serial.begin(115200);
-  pinMode(5,INPUT);
-  pinMode(4,OUTPUT);
+  pinMode(5,INPUT);//pin de control del sonido
+  pinMode(4,OUTPUT); //pin de encendido del sonido
+ // digitalWrite(4,HIGH);
   for(i=0;i<cantS;i++){
     pinMode(M[i],OUTPUT);
     analogWrite(M[i],0);
   }
-  //  if (!myDFPlayer.begin(mySoftwareSerial)) { 
-//    Serial.println("Error");
-//    while(true);
-//  }
- // Serial.println("Funca");
- // myDFPlayer.volume(10);  //Set volume value. From 0 to 30
-//  myDFPlayer.play(1);  //Play the first mp3
-  delay(7000);
+
+  delay(1000);
 }
 
 void loop()
 {
    boolean busy = digitalRead(5);
-  delay(7000);
-  if (busy==false)
+  delay(14000);
+  if (busy==false)// Si se reproduce el sonido entoces....
   { 
     Serial.println("0");
-    //myDFPlayer.play(1);
-    digitalWrite(4,HIGH);
-    
-    for(vel=0; vel<=255; vel++)
+   // myDFPlayer.play(1);
+    for(vel=0; vel<=255; vel++) //velocidad de los motores
     {  
       for(i=0;i<cantS; i++)
       {
         if(S[i] == 1)
         {
             analogWrite(M[i],vel);
-            Serial.print("Motor :");
-            Serial.print(i);
-            Serial.print("  vel: ");
-            Serial.print(vel); 
-            Serial.println(); 
         }
-        delay(100);
+        delay(25);
       }
     }
-    delay(66000);
-    for(vel=255; vel>=0; vel--)
+    delay(44000);
+    for(vel=254; vel>=0; vel--)
     {  
       for(i=0;i<cantS; i++)
       {
         if(S[i] == 1)
         {
             analogWrite(M[i],vel);
-            Serial.print("Motor :");
-            Serial.print(i);
-            Serial.print("  vel: ");
-            Serial.print(vel); 
-            Serial.println(); 
         }
-        delay(50);
+      //  delay(50);
       }
     }
   }
-  else{
+  else // Si no se reproduce el sonido entoces....
+  {
     Serial.println("1");
+    digitalWrite(4,LOW); // En teoría esto lo deberia hacer funcionar cosa que no lo hace
+    //Ahora sería posible que por no estar conectado a una misma corriente 
+    //(detalle de mi comentario de FB) el reproductor no funcione?? 
+    //Serial.print("encender musica");
+    //Serial.println(digitalRead(4));
+    delay(10);
     digitalWrite(4,HIGH);
     delay(50);
+    for(i=0;i<cantS; i++)
+      {
+        if(S[i] == 1)
+        {
+            analogWrite(M[i],0);
+        }
+        //delay(13);
+      }
   }
   
   delay(50);
